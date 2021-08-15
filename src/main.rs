@@ -1,29 +1,40 @@
 mod application;
 #[rustfmt::skip]
 mod config;
+mod error;
 mod window;
 
-use application::ExampleApplication;
+use application::TerminiApplication;
 use config::{GETTEXT_PACKAGE, LOCALEDIR, RESOURCES_FILE};
+use error::*;
 use gettextrs::{gettext, LocaleCategory};
 use gtk::{gio, glib};
 
-fn main() {
+fn main() -> Result<()> {
     // Initialize logger
     pretty_env_logger::init();
-
-    // Prepare i18n
-    gettextrs::setlocale(LocaleCategory::LcAll, "");
-    gettextrs::bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR).expect("Unable to bind the text domain");
-    gettextrs::textdomain(GETTEXT_PACKAGE).expect("Unable to switch to the text domain");
+    init_i18n()?;
+    init_app()?;
 
     glib::set_application_name(&gettext("Termini"));
 
-    gtk::init().expect("Unable to start GTK4");
-
-    let res = gio::Resource::load(RESOURCES_FILE).expect("Could not load gresource file");
-    gio::resources_register(&res);
-
-    let app = ExampleApplication::new();
+    let app = TerminiApplication::new();
     app.run();
+
+    Ok(())
+}
+
+fn init_i18n() -> Result<()> {
+    gettextrs::setlocale(LocaleCategory::LcAll, "");
+    gettextrs::bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR)?;
+    gettextrs::textdomain(GETTEXT_PACKAGE)?;
+
+    Ok(())
+}
+
+fn init_app() -> Result<()> {
+    gtk::init()?;
+    gio::resources_register(&gio::Resource::load(RESOURCES_FILE)?);
+
+    Ok(())
 }

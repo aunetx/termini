@@ -11,19 +11,28 @@
         <attribute name="action">win.show-help-overlay</attribute>
       </item>
       <item>
-        <attribute name="label" translatable="yes">_About GTK Rust Template</attribute>
+        <attribute name="label" translatable="yes">_About Termini</attribute>
         <attribute name="action">app.about</attribute>
       </item>
     </section>
   </menu>
-  <template class="ExampleApplicationWindow" parent="GtkApplicationWindow">
+  <template class="TerminiApplicationWindow" parent="GtkApplicationWindow">
     <property name="default-width">600</property>
     <property name="default-height">400</property>
     <child type="titlebar">
       <object class="GtkHeaderBar" id="headerbar">
+        <!-- 
+        <property name="name">new-terminal-button</property>
+        <property name="action-name">app.new-tab</property>
+-->
+        <child>
+          <object class="GtkButton" id="newtab_button">
+            <property name="icon-name">tab-new-symbolic</property>
+          </object>
+        </child>
         <child type="end">
           <object class="GtkMenuButton" id="appmenu_button">
-            <property name="icon-name">open-menu-symbolic</property>
+            <property name="icon-name">pan-down-symbolic</property>
             <property name="menu-model">primary_menu</property>
           </object>
         </child>
@@ -33,7 +42,7 @@
       <object class="GtkLabel" id="label">
         <property name="label" translatable="yes">Hello world!</property>
         <style>
-          <class name="title-header"/>
+          <class name="title-header" />
         </style>
       </object>
     </child>

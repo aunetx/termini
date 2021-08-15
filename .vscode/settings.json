@@ -1,0 +1,5 @@
+{
+    "code-runner.executorMap": {
+        "rust": "flatpak build --share=network --nofilesystem=host --filesystem=$workspaceRoot --filesystem=$workspaceRoot/.flatpak/repo --env=PATH=$PATH:/usr/lib/sdk/rust-stable/bin --env=RUST_BACKTRACE=1 --filesystem=$workspaceRoot/_build $workspaceRoot/.flatpak/repo ninja -C _build && flatpak build --share=network --nofilesystem=host --filesystem=$workspaceRoot --filesystem=$workspaceRoot/.flatpak/repo --env=PATH=$PATH:/usr/lib/sdk/rust-stable/bin --env=RUST_BACKTRACE=1 --filesystem=$workspaceRoot/_build $workspaceRoot/.flatpak/repo meson install -C _build && flatpak build --with-appdir --allow=devel --bind-mount=/run/user/1000/doc=/run/user/1000/doc/by-app/com.github.aunetx.Termini.Devel --socket=fallback-x11 --socket=wayland --device=dri --talk-name=org.a11y.Bus --env=RUST_LOG=termini=debug --env=G_MESSAGES_DEBUG=none --talk-name='org.freedesktop.portal.*' --talk-name=org.a11y.Bus --env=DESKTOP_SESSION=gnome --env=XDG_SESSION_DESKTOP=gnome --env=XDG_SESSION_TYPE=x11 --env=LANG=fr_FR.UTF-8 --env=XDG_CURRENT_DESKTOP=GNOME $workspaceRoot/.flatpak/repo termini",
+    },
+}

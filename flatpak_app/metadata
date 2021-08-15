@@ -1,0 +1,4 @@
+[Application]
+name=com.github.aunetx.Termini.Devel
+runtime=org.gnome.Platform/x86_64/40
+sdk=org.gnome.Sdk/x86_64/40

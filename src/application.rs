@@ -5,7 +5,7 @@ use gtk::{gdk, gio, glib};
 use log::{debug, info};
 
 use crate::config::{APP_ID, PKGDATADIR, PROFILE, VERSION};
-use crate::window::ExampleApplicationWindow;
+use crate::window::TerminiApplicationWindow;
 
 mod imp {
     use super::*;
@@ -13,22 +13,22 @@ mod imp {
     use once_cell::sync::OnceCell;
 
     #[derive(Debug, Default)]
-    pub struct ExampleApplication {
-        pub window: OnceCell<WeakRef<ExampleApplicationWindow>>,
+    pub struct TerminiApplication {
+        pub window: OnceCell<WeakRef<TerminiApplicationWindow>>,
     }
 
     #[glib::object_subclass]
-    impl ObjectSubclass for ExampleApplication {
-        const NAME: &'static str = "ExampleApplication";
-        type Type = super::ExampleApplication;
+    impl ObjectSubclass for TerminiApplication {
+        const NAME: &'static str = "TerminiApplication";
+        type Type = super::TerminiApplication;
         type ParentType = gtk::Application;
     }
 
-    impl ObjectImpl for ExampleApplication {}
+    impl ObjectImpl for TerminiApplication {}
 
-    impl ApplicationImpl for ExampleApplication {
+    impl ApplicationImpl for TerminiApplication {
         fn activate(&self, app: &Self::Type) {
-            debug!("GtkApplication<ExampleApplication>::activate");
+            debug!("GtkApplication<TerminiApplication>::activate");
 
             if let Some(window) = self.window.get() {
                 let window = window.upgrade().unwrap();
@@ -37,16 +37,16 @@ mod imp {
                 return;
             }
 
-            let window = ExampleApplicationWindow::new(app);
+            let window = TerminiApplicationWindow::new(app);
             self.window
                 .set(window.downgrade())
-                .expect("Window already set.");
+                .expect("Window already set");
 
             app.main_window().present();
         }
 
         fn startup(&self, app: &Self::Type) {
-            debug!("GtkApplication<ExampleApplication>::startup");
+            debug!("GtkApplication<TerminiApplication>::startup");
             self.parent_startup(app);
 
             // Set icons for shell
@@ -58,30 +58,27 @@ mod imp {
         }
     }
 
-    impl GtkApplicationImpl for ExampleApplication {}
+    impl GtkApplicationImpl for TerminiApplication {}
 }
 
 glib::wrapper! {
-    pub struct ExampleApplication(ObjectSubclass<imp::ExampleApplication>)
+    pub struct TerminiApplication(ObjectSubclass<imp::TerminiApplication>)
         @extends gio::Application, gtk::Application,
         @implements gio::ActionMap, gio::ActionGroup;
 }
 
-impl ExampleApplication {
+impl TerminiApplication {
     pub fn new() -> Self {
         glib::Object::new(&[
             ("application-id", &Some(APP_ID)),
             ("flags", &gio::ApplicationFlags::empty()),
-            (
-                "resource-base-path",
-                &Some("/com/github/aunetx/Termini/"),
-            ),
+            ("resource-base-path", &Some("/com/github/aunetx/Termini/")),
         ])
         .expect("Application initialization failed...")
     }
 
-    fn main_window(&self) -> ExampleApplicationWindow {
-        let imp = imp::ExampleApplication::from_instance(self);
+    fn main_window(&self) -> TerminiApplicationWindow {
+        let imp = imp::TerminiApplication::from_instance(self);
         imp.window.get().unwrap().upgrade().unwrap()
     }
 
@@ -124,10 +121,8 @@ impl ExampleApplication {
         let dialog = gtk::AboutDialogBuilder::new()
             .program_name("Termini")
             .logo_icon_name(APP_ID)
-            // Insert your license of choice here
-            // .license_type(gtk::License::MitX11)
-            // Insert your website here
-            // .website("https://gitlab.gnome.org/bilelmoussaoui/termini/")
+            .license_type(gtk::License::MitX11)
+            .website("https://github.com/aunetx/termini/")
             .version(VERSION)
             .transient_for(&self.main_window())
             .modal(true)
